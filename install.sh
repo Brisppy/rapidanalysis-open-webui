@@ -1,3 +1,5 @@
+#!/bin/bash
+
 CURDIR="$(basename "$PWD")"
 
 if [ "$CURDIR" == "rapidanalysis-open-webui" ]; then
@@ -9,8 +11,7 @@ if [ "$CURDIR" == "rapidanalysis-open-webui" ]; then
   # replace relevant files with our own versions
   cp "./overwrite/*" "./open-webui"
 
-  # run docker compose
-  docker compose up
+  echo "INFO: Installation complete, run the containers with 'docker compose up'."
 else
   echo "ERROR: Update script must be run from inside the RapidAnalysis OpenWebUI directory."
 fi
