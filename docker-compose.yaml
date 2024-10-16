@@ -1,28 +1,16 @@
 services:
-  fastchat-controller:
+  llama-cpp:
     build:
-      context: ./FastChat/docker
-      dockerfile: Dockerfile
-    image: fastchat:latest
-    ports:
-      - "21001:21001"
-    entrypoint: ["python3.9", "-m", "fastchat.serve.controller", "--host", "0.0.0.0", "--port", "21001"]
-
-  fastchat-model-worker:
-    build:
-      context: ./FastChat/docker
+      context: ./llama.cpp
       dockerfile: Dockerfile
     volumes:
-      - huggingface:/root/.cache/huggingface
-    image: fastchat:latest
-    entrypoint: ["python3.9", "-m", "fastchat.serve.model_worker", "--model-names", "${FASTCHAT_WORKER_MODEL_NAMES:-vicuna-7b-v1.5}", "--model-path", "${FASTCHAT_WORKER_MODEL_PATH:-lmsys/vicuna-7b-v1.5}", "--worker-address", "http://fastchat-model-worker:21002", "--controller-address", "http://fastchat-controller:21001", "--host", "0.0.0.0", "--port", "21002", "--device", "cpu", "--load-8bit"]
-
-  fastchat-api-server:
-    build:
-      context: ./FastChat/docker
-      dockerfile: Dockerfile
-    image: fastchat:latest
-    entrypoint: ["python3.9", "-m", "fastchat.serve.openai_api_server", "--controller-address", "http://fastchat-controller:21001", "--host", "0.0.0.0", "--port", "8081"]
+      - ./data:/data
+    container_name: llama-cpp
+    tty: true
+    restart: unless-stopped
+    environment:
+      - "HUGGINGFACE_MODEL=Qwen/Qwen2.5-0.5B-Instruct"
+    entrypoint: /data/entrypoint.sh
 
   open-webui:
     build:
@@ -34,7 +22,7 @@ services:
     volumes:
       - open-webui:/app/backend/data
     depends_on:
-      - fastchat-api-server
+      - llama-cpp
     ports:
       - ${OPEN_WEBUI_PORT-3000}:8080
     environment:
@@ -43,11 +31,11 @@ services:
       - 'ENABLE_OAUTH_SIGNUP=false'
       - 'WEBUI_SECRET_KEY='
       - 'ENABLE_OPENAI_API=true'
-      - 'OPENAI_API_BASE_URL=http://fastchat-api-server:8081/v1'
+      - 'OPENAI_API_BASE_URL=http://llama-cpp:8081/v1'
+      - 'OPENAI_API_KEY=none'
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
 
 volumes:
-  huggingface:
   open-webui: {}
