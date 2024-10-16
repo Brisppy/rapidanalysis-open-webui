@@ -1,0 +1,53 @@
+services:
+  fastchat-controller:
+    build:
+      context: ./FastChat/docker
+      dockerfile: Dockerfile
+    image: fastchat:latest
+    ports:
+      - "21001:21001"
+    entrypoint: ["python3.9", "-m", "fastchat.serve.controller", "--host", "0.0.0.0", "--port", "21001"]
+
+  fastchat-model-worker:
+    build:
+      context: ./FastChat/docker
+      dockerfile: Dockerfile
+    volumes:
+      - huggingface:/root/.cache/huggingface
+    image: fastchat:latest
+    entrypoint: ["python3.9", "-m", "fastchat.serve.model_worker", "--model-names", "${FASTCHAT_WORKER_MODEL_NAMES:-vicuna-7b-v1.5}", "--model-path", "${FASTCHAT_WORKER_MODEL_PATH:-lmsys/vicuna-7b-v1.5}", "--worker-address", "http://fastchat-model-worker:21002", "--controller-address", "http://fastchat-controller:21001", "--host", "0.0.0.0", "--port", "21002", "--device", "cpu", "--load-8bit"]
+
+  fastchat-api-server:
+    build:
+      context: ./FastChat/docker
+      dockerfile: Dockerfile
+    image: fastchat:latest
+    entrypoint: ["python3.9", "-m", "fastchat.serve.openai_api_server", "--controller-address", "http://fastchat-controller:21001", "--host", "0.0.0.0", "--port", "8081"]
+
+  open-webui:
+    build:
+      context: ./open-webui
+      args:
+        OLLAMA_BASE_URL: '/ollama'
+      dockerfile: Dockerfile
+    container_name: open-webui
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - fastchat-api-server
+    ports:
+      - ${OPEN_WEBUI_PORT-3000}:8080
+    environment:
+      - 'ENABLE_OLLAMA_API=false'
+      - 'WEBUI_AUTH=false'
+      - 'ENABLE_OAUTH_SIGNUP=false'
+      - 'WEBUI_SECRET_KEY='
+      - 'ENABLE_OPENAI_API=true'
+      - 'OPENAI_API_BASE_URL=http://fastchat-api-server:8081/v1'
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+
+volumes:
+  huggingface:
+  open-webui: {}
