@@ -1,6 +1,12 @@
 #!/bin/bash
 
 REPONAME="${HUGGINGFACE_REPO}"
+
+# check repo is provided
+if [ -n "$REPONAME" ]; then
+  echo "ERROR: Repo must be provided via the 'HUGGINGFACE_REPO' environment variable."
+fi
+
 # split repo and store model name only
 MODELNAME=$(echo "$REPONAME" | cut -d "/" -f 2)
 BASEDIR="/data"
