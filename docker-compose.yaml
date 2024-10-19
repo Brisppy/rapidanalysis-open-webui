@@ -1,8 +1,8 @@
 services:
   llama-cpp:
     build:
-      context: ./llama.cpp
-      dockerfile: Dockerfile
+      context: ./llama.cpp/
+      dockerfile: .devops/full.Dockerfile
     volumes:
       - ./data:/data
     container_name: llama-cpp
