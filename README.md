@@ -26,11 +26,11 @@ This assumes you have downloaded the previously mentioned requirements on a fres
 
 3. Add the ‘execute’ permission to the installation script.
 
-       chmod +x startup.sh
+       chmod +x install.sh
 
 4. Run the installation script.
 
-       ./startup.sh
+       ./install.sh
 
 ## Configuration
 ### Changing the Language Model
