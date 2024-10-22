@@ -11,6 +11,9 @@ if [ "$CURDIR" == "rapidanalysis-open-webui" ]; then
   # replace relevant files with our own versions
   cp "./overwrite/*" "./open-webui"
 
+  # add execute permission to entrypoint script
+  chmod +x "./data/entrypoint.sh"
+
   echo "INFO: Installation complete, run the containers with 'docker compose up'."
 else
   echo "ERROR: Update script must be run from inside the RapidAnalysis OpenWebUI directory."
