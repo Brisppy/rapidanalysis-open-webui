@@ -1,10 +1,11 @@
 #!/bin/bash
 
-REPONAME="${HUGGINGFACE_REPO}"
+REPONAME="${HUGGINGFACE_MODEL}"
 
-# check repo is provided
-if [ -n "$REPONAME" ]; then
-  echo "ERROR: Repo must be provided via the 'HUGGINGFACE_REPO' environment variable."
+# check repo is provided, should look like "Qwen/Qwen2.5-0.5B-Instruct"
+if [[ ! "$REPONAME" =~ "/" ]]; then
+  echo "ERROR: Huggingface repo must be provided via the 'HUGGINGFACE_REPO' environment variable."
+  exit 1
 fi
 
 # split repo and store model name only
