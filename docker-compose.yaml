@@ -34,8 +34,8 @@ services:
     ports:
       - ${OPEN_WEBUI_PORT-3000}:8080
     environment:
-      - 'ENABLE_OLLAMA_API=false'
       - 'WEBUI_AUTH=false'
+      - 'OLLAMA_BASE_URL=http://flantastic:11434'
       - 'ENABLE_OAUTH_SIGNUP=false'
       - 'WEBUI_SECRET_KEY='
       - 'ENABLE_OPENAI_API=true'
