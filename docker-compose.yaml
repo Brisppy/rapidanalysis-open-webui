@@ -1,4 +1,12 @@
 services:
+  flantastic:
+    build:
+      context: flantastic
+      dockerfile: Dockerfile
+    container_name: flantastic
+    tty: true
+    restart: unless-stopped
+
   llama-cpp:
     build:
       context: ./llama.cpp/
