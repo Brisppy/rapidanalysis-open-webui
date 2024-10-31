@@ -32,6 +32,8 @@ This assumes you have downloaded the previously mentioned requirements on a fres
 
        ./install.sh
 
+Do note that it will take some time for the model to appear on first launch as it has to be downloaded and converted first.
+
 ## Configuration
 ### Changing the Language Model
 The Large-Language model used can be modified by editing the `docker-compose.yml` file located inside of the application directory. Currently, only models uploaded to Hugging Face are supported, and an alternate model can be configured by replacing the `HUGGINGFACE_MODEL` environment variable for the llama.cpp container.

@@ -36,6 +36,7 @@ services:
     environment:
       - 'WEBUI_AUTH=false'
       - 'OLLAMA_BASE_URL=http://flantastic:11434'
+      - 'DEFAULT_MODELS=/data/models/Qwen2.5-0.5B-Instruct.gguf'
       - 'ENABLE_OAUTH_SIGNUP=false'
       - 'WEBUI_SECRET_KEY='
       - 'ENABLE_OPENAI_API=true'
