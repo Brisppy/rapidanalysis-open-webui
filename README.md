@@ -7,7 +7,7 @@ This implementation replaces the original [Ollama](https://github.com/ollama/oll
 ## Installation
 ### RapidAnalysis Darius Device
 If you have purchased the RapidAnalysis Darius hardware device, little to no setup is required, simply plug the device into the network, and it will receive an IP address which you can then access it from. From here the network setup can be modified following the Debian distribution wiki which the device is based on.
-### Manual Installation
+### Installation (Linux)
 If you are looking to deploy the Web application on your own device, or wish to reinstall the software on the RapidAnalysis Darius device this section contains relevant instructions.
 
 The below software must be installed before you can run the installation script.
@@ -31,6 +31,27 @@ This assumes you have downloaded the previously mentioned requirements on a fres
 4. Run the installation script.
 
        ./install.sh
+
+### Installation (Windows)
+If you are looking to deploy the Web application on your own device, this section contains relevant instructions.
+
+The below software must be installed before you can run the installation commands.
+* Git
+* Docker
+
+1. Open a command prompt in the directory you want to put the docker containers.
+2. Clone the required repositories.
+
+       git clone --branch v0.3.11 https://github.com/open-webui/open-webui
+       git clone --branch b3923 https://github.com/ggerganov/llama.cpp --config core.autocrlf=false
+
+3. Overwrite files.
+
+       robocopy .\overwrite\ .\open-webui\ /S
+
+4. Start the containers.
+
+       docker compose up
 
 Do note that it will take some time for the model to appear on first launch as it has to be downloaded and converted first.
 
